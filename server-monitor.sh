@@ -29,3 +29,21 @@ then
 else
     log INFO "Memory usage: ${mem_usage}%"
 fi
+
+#Cpu Check
+
+head -1 /proc/stat
+read total1 idle1 <<< "$(awk '/^cpu / {idle=$5+$6; total=0; for(i=2;i<=NF;i++) total+=$i; print total, idle}' /proc/stat)"
+sleep 1
+read total2 idle2 <<< "$(awk '/^cpu / {idle=$5+$6; total=0; for(i=2;i<=NF;i++) total+=$i; print total, idle}' /proc/stat)"
+total=$((total2 - total1))
+idle=$((idle2 - idle1))
+usage=$(( (total - idle) * 100 / total ))
+
+cpu_warn=80
+if [[ $usage -ge $cpu_warn ]]
+then
+     log WARNING "Cpu usage: ${usage}% (threshold ${cpu_warn}%)"
+else
+    log INFO "Cpu usage: ${usage}%"
+fi
