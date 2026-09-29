@@ -57,7 +57,7 @@ check_cpu() {
 
 #ip address
 check_network() {
-	ip_addr=$(hostname -I | awk '{print $1}')
+	ip_addr=$(hostname -i | awk '{print $1}')
 	ping -c 1 -W 2 8.8.8.8 > /dev/null
 	ping_result=$?
 	if [[ $ping_result -eq 0 ]]
